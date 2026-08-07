@@ -564,9 +564,18 @@ function card(d){
   // range band on a 0..2x-tier scale, tick at what you pay
   const sc=v=>Math.max(0,Math.min(v/(d.tier*2),1))*100;
   const L=sc(d.worst), R=sc(d.best);
-  // The band wears the verdict's own colour, so the bar and the chip above it
-  // never disagree: green you save, blue you save if you order well, red you lose.
-  const bandcol={safe:'var(--val-save)',pick:'var(--val-pick)',skip:'var(--val-lose)',
+  // The band wears the verdict's own colour: green you save, navy you save if
+  // you order well, red you lose.
+  //
+  // With one override. An "order right" menu whose best case clears the price by
+  // $10 or more is, in practice, a saving -- the upside is real money and the
+  // downside is usually a few dollars. Painting that navy undersells it. The
+  // chip stays navy because the conditional is still true; the bar goes green
+  // because the money is.
+  const BIG_SAVING = 10;
+  const bandcol={safe:'var(--val-save)',
+    pick:(d.best - d.tier >= BIG_SAVING) ? 'var(--val-save)' : 'var(--val-pick)',
+    skip:'var(--val-lose)',
     marginal:'var(--conf-mixed)',partial:'var(--partial)',even:'var(--muted)',
     party:'var(--muted)'}[d.verdict]||'var(--muted)';
   const sel=selOf(d);
