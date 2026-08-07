@@ -252,7 +252,6 @@ footer a{color:var(--accent)}
     <div class="ms" id="category"></div>
     <div class="ms" id="city"></div>
     <select id="meal"><option value="">Any meal</option><option>Brunch</option><option>Lunch</option><option>Dinner</option></select>
-    <select id="verdict"><option value="">Any verdict</option></select>
     <select id="day">
       <option value="">Any day</option>
       <option value="we">Weekend (Sat or Sun)</option>
@@ -325,7 +324,7 @@ const srcOf=o=>{
 };
 
 /* ------------------------------------------------- filter state & hash --- */
-const S={q:'',city:[],category:[],verdict:'',meal:'',price:'',day:'',sort:'pct'};
+const S={q:'',city:[],category:[],meal:'',price:'',day:'',sort:'pct'};
 // Shareable filter state lives in the hash as #f&q=...&cat=a|b - anything else is a card anchor.
 (function(){
   const h=location.hash;
@@ -334,17 +333,16 @@ const S={q:'',city:[],category:[],verdict:'',meal:'',price:'',day:'',sort:'pct'}
   S.q=p.get('q')||'';
   S.category=(p.get('cat')||'').split('|').filter(Boolean);
   S.city=(p.get('area')||'').split('|').filter(Boolean);
-  S.verdict=p.get('v')||'';
   S.meal=p.get('meal')||''; S.price=p.get('price')||''; S.day=p.get('day')||'';
   S.sort=p.get('sort')||'pct';
 })();
 function updateHash(){
-  const def=!S.q&&!S.category.length&&!S.city.length&&!S.verdict&&!S.meal&&!S.price&&S.day===''&&S.sort==='pct';
+  const def=!S.q&&!S.category.length&&!S.city.length&&!S.meal&&!S.price&&S.day===''&&S.sort==='pct';
   if(def){ if(location.hash.startsWith('#f&')) history.replaceState(null,'',location.pathname+location.search); return; }
   const p=new URLSearchParams();
   if(S.q)p.set('q',S.q); if(S.category.length)p.set('cat',S.category.join('|'));
   if(S.city.length)p.set('area',S.city.join('|'));
-  if(S.verdict)p.set('v',S.verdict); if(S.meal)p.set('meal',S.meal);
+  if(S.meal)p.set('meal',S.meal);
   if(S.price)p.set('price',S.price); if(S.day!=='')p.set('day',S.day);
   if(S.sort!=='pct')p.set('sort',S.sort);
   history.replaceState(null,'','#f&'+p.toString());
@@ -403,22 +401,9 @@ document.addEventListener('click',e=>{
   document.querySelectorAll('.msbtn').forEach(b=>b.setAttribute('aria-expanded','false'));
 });
 
-/* The verdict dropdown is built from the data so its options always carry the
-   real counts, and a verdict that stops existing stops being offered. */
-(function(){
-  const sel=document.getElementById('verdict');
-  const n={}; DATA.forEach(d=>{n[d.verdict]=(n[d.verdict]||0)+1});
-  ['safe','pick','marginal','even','skip','party','partial'].filter(v=>n[v]).forEach(v=>{
-    const o=document.createElement('option');
-    o.value=v; o.textContent=`${ICON[v]} ${LABEL[v]} (${n[v]})`;
-    sel.appendChild(o);
-  });
-  sel.value=S.verdict;
-})();
 // reflect any hash-restored state into the plain controls
 document.getElementById('q').value=S.q;
 document.getElementById('meal').value=S.meal;
-document.getElementById('verdict').value=S.verdict;
 document.getElementById('price').value=S.price;
 document.getElementById('day').value=S.day;
 document.getElementById('sort').value=S.sort;
@@ -755,7 +740,6 @@ function render(){
   let r=DATA.filter(d=>{
     if(S.city.length&&!S.city.includes(d.city))return false;
     if(S.category.length&&!(d.category||[]).some(c=>S.category.includes(c)))return false;
-    if(S.verdict&&d.verdict!==S.verdict)return false;
     if(S.meal&&d.meal!==S.meal)return false;
     if(S.price&&String(d.tier)!==S.price)return false;
     // an empty day list means the restaurant never published days: keep the
@@ -789,7 +773,7 @@ function render(){
   updateHash();
 }
 const bind=(id,k)=>document.getElementById(id).addEventListener('input',e=>{S[k]=e.target.value;render()});
-bind('meal','meal');bind('verdict','verdict');bind('price','price');bind('day','day');bind('sort','sort');
+bind('meal','meal');bind('price','price');bind('day','day');bind('sort','sort');
 // Typing still debounces: the filter pass over 682 entries is cheap, but there
 // is no reason to run it letter by letter.
 let qTimer=null;
