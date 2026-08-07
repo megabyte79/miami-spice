@@ -34,6 +34,16 @@
   --sky:#FF6B63; --teal:#C3C8C9; --orange:#FE9B0C; --coral:#FF5027; --slate:#111315;
   --inset:#F4F4F4; --cobalt:#E91C23;
   --party:#5A6066; --even:#5A6066; --partial:#6E767C;
+  /* Value status colours, carried over from the Dine Out guide and deliberately
+     NOT the brand red. Red is the chrome here, so a red "you save" bar read as a
+     warning; worse, it made saving and losing the same hue. Money keeps its
+     conventional signals: green you win, blue you win if you order well, red you
+     lose, amber how sure we are. The blue is the page's own button navy lifted
+     two steps: #1C2A43 itself reads as black in a 12px bar, and black already
+     means "costs more" here, so the bar would stop saying anything. */
+  --val-save:#12875A; --val-pick:#23456F; --val-lose:#E0432B;
+  --conf-verified:#12875A; --conf-mixed:#F2A900; --conf-estimated:#F2884B;
+  --val-pick-soft:rgba(35,69,111,.09); --val-pick-line:rgba(35,69,111,.35);
   --display:"Saira Extra Condensed",system-ui,sans-serif;
   --r:3px;
 }
@@ -51,6 +61,11 @@
      a dark page reads as an error state. Caught by rendering it, not reasoning. */
   --inset:#1F2023; --cobalt:#7E1116;
   --party:#8E9194; --even:#AEB0B3; --partial:#8E9194;
+  /* Lifted for the dark surface; the same four signals, re-stepped rather than
+     flipped. Blue especially: the button navy #414E6B on near-black vanishes. */
+  --val-save:#1FA971; --val-pick:#7C93C9; --val-lose:#FF6B52;
+  --conf-verified:#1FA971; --conf-mixed:#F2A900; --conf-estimated:#F2884B;
+  --val-pick-soft:rgba(124,147,201,.16); --val-pick-line:rgba(124,147,201,.42);
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -144,11 +159,12 @@ a.addr:hover{color:var(--accent);text-decoration:underline}
   padding:4px 10px;border-radius:var(--r);border:1px solid transparent;width:fit-content}
 .confchip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--ink-2);
   padding:4px 9px;border-radius:var(--r);border:1px solid var(--ring);background:var(--inset)}
-.v-safe{color:#fff;background:var(--brand);border-color:var(--brand)}
-:root[data-theme="dark"] .v-safe{color:#1A0505}
-.v-pick{color:var(--good);background:var(--accent-soft);border-color:rgba(233,28,35,.35)}
+.v-safe{color:#fff;background:var(--val-save);border-color:var(--val-save)}
+:root[data-theme="dark"] .v-safe{color:#04160E}
+.v-pick{color:var(--val-pick);background:var(--val-pick-soft);border-color:var(--val-pick-line)}
 .v-marginal{color:var(--ink-2);background:var(--inset);border-color:var(--baseline)}
-.v-skip{color:var(--plane);background:var(--critical);border-color:var(--critical)}
+.v-skip{color:#fff;background:var(--val-lose);border-color:var(--val-lose)}
+:root[data-theme="dark"] .v-skip{color:#2A0A05}
 .v-even{color:var(--ink-2);background:var(--inset);border-color:var(--ring)}
 .v-party{color:var(--ink-2);background:var(--inset);border-color:var(--baseline)}
 .v-partial{color:var(--ink-2);background:var(--inset);border-color:var(--ring)}
@@ -201,7 +217,7 @@ a.addr:hover{color:var(--accent);text-decoration:underline}
 .opt.pickable{cursor:pointer;border-radius:var(--r);padding:6px 8px;margin:0 -8px;
   border:1px solid transparent;transition:background .12s,border-color .12s}
 .opt.pickable:hover{background:var(--card)}
-.opt.pickable.on{background:rgba(30,103,205,.09);border-color:rgba(30,103,205,.35)}
+.opt.pickable.on{background:var(--val-pick-soft);border-color:var(--val-pick-line)}
 .opt.pickable:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .mark{display:inline-block;width:13px;height:13px;border-radius:50%;border:2px solid var(--ring);
   margin-right:7px;vertical-align:-1px}
@@ -211,21 +227,22 @@ a.addr:hover{color:var(--accent);text-decoration:underline}
 .bsum{margin-top:12px;padding-top:11px;border-top:1px solid var(--grid);font-size:13.5px;
   color:var(--ink-2);display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .bsum b{color:var(--ink);font-weight:700}
-.bsum .up{color:var(--good)} .bsum .dn{color:var(--critical)}
+.bsum .up{color:var(--val-save)} .bsum .dn{color:var(--val-lose)}
 .breset{background:none;border:none;color:var(--accent);font-family:inherit;font-size:12px;
   font-weight:650;cursor:pointer;padding:0;text-decoration:underline;white-space:nowrap}
 .you{position:absolute;top:-6px;bottom:-6px;width:3px;background:var(--accent);border-radius:var(--r);
   box-shadow:0 0 0 2px var(--card)}
 .savings{font-size:13.5px;color:var(--ink-2);margin:0 0 8px;line-height:1.4}
 .savings b{font-weight:700}
-.savings .up{color:var(--good)} .savings .dn{color:var(--critical)} .savings .ev{color:var(--ink)}
+.savings .up{color:var(--val-save)} .savings .dn{color:var(--val-lose)} .savings .ev{color:var(--ink)}
 .barnote{font-size:12px;color:var(--ink-2);margin-top:20px}
 .barnote b{color:var(--ink)}
 .conf{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-top:auto;padding-top:10px}
 a.rep{margin-left:auto;color:var(--muted);text-decoration:none;font-weight:600}
 a.rep:hover{color:var(--accent);text-decoration:underline}
 .dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
-.d-verified{background:var(--good)} .d-mixed{background:var(--warning)} .d-estimated{background:var(--baseline)} .d-none{background:var(--muted)}
+.d-verified{background:var(--conf-verified)} .d-mixed{background:var(--conf-mixed)}
+.d-estimated{background:var(--conf-estimated)} .d-none{background:var(--muted)}
 .empty{text-align:center;color:var(--muted);padding:60px 20px;font-size:14px}
 footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--grid);font-size:12.5px;color:var(--muted);max-width:80ch}
 footer b{color:var(--ink-2)}
@@ -543,8 +560,11 @@ function card(d){
   // range band on a 0..2x-tier scale, tick at what you pay
   const sc=v=>Math.max(0,Math.min(v/(d.tier*2),1))*100;
   const L=sc(d.worst), R=sc(d.best);
-  const bandcol=d.verdict==='partial'?'var(--partial)':d.verdict==='safe'?'var(--good)':d.verdict==='skip'?'var(--critical)'
-    :(d.verdict==='even'||d.verdict==='party')?'var(--muted)':'var(--accent)';
+  // The band wears the verdict's own colour, so the bar and the chip above it
+  // never disagree: green you save, blue you save if you order well, red you lose.
+  const bandcol={safe:'var(--val-save)',pick:'var(--val-pick)',skip:'var(--val-lose)',
+    marginal:'var(--conf-mixed)',partial:'var(--partial)',even:'var(--muted)',
+    party:'var(--muted)'}[d.verdict]||'var(--muted)';
   const sel=selOf(d);
   const menuHtml=bcs.map(c=>{
     const on=new Set(sel[c.key]||[]);
