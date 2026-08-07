@@ -44,6 +44,7 @@
   --val-save:#12875A; --val-pick:#23456F; --val-lose:#E0432B;
   --conf-verified:#12875A; --conf-mixed:#F2A900; --conf-estimated:#F2884B;
   --val-pick-soft:rgba(35,69,111,.09); --val-pick-line:rgba(35,69,111,.35);
+  --val-save-soft:rgba(18,135,90,.09); --val-save-line:rgba(18,135,90,.35);
   --display:"Saira Extra Condensed",system-ui,sans-serif;
   --r:3px;
 }
@@ -66,6 +67,7 @@
   --val-save:#1FA971; --val-pick:#7C93C9; --val-lose:#FF6B52;
   --conf-verified:#1FA971; --conf-mixed:#F2A900; --conf-estimated:#F2884B;
   --val-pick-soft:rgba(124,147,201,.16); --val-pick-line:rgba(124,147,201,.42);
+  --val-save-soft:rgba(31,169,113,.16); --val-save-line:rgba(31,169,113,.42);
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -159,8 +161,10 @@ a.addr:hover{color:var(--accent);text-decoration:underline}
   padding:4px 10px;border-radius:var(--r);border:1px solid transparent;width:fit-content}
 .confchip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--ink-2);
   padding:4px 9px;border-radius:var(--r);border:1px solid var(--ring);background:var(--inset)}
-.v-safe{color:#fff;background:var(--val-save);border-color:var(--val-save)}
-:root[data-theme="dark"] .v-safe{color:#04160E}
+/* The two verdicts a diner actually wants to see share a shape: tinted plate,
+   coloured type. Only the colour separates them, so the pair reads as one scale
+   rather than two unrelated badges -- and neither shouts over the brand red. */
+.v-safe{color:var(--val-save);background:var(--val-save-soft);border-color:var(--val-save-line)}
 .v-pick{color:var(--val-pick);background:var(--val-pick-soft);border-color:var(--val-pick-line)}
 .v-marginal{color:var(--ink-2);background:var(--inset);border-color:var(--baseline)}
 .v-skip{color:#fff;background:var(--val-lose);border-color:var(--val-lose)}
