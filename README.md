@@ -16,13 +16,30 @@ Bureau or any restaurant.
 |---|---|
 | `index.html` | the whole guide, one self-contained file |
 | `report.html` | error-report form |
-| `build/` | the scripts and data the page is generated from |
+| `build/` | the generator, the scoring engine, the validators and the data |
+| `LICENSE` | MIT for the code, CC BY-NC-SA for the research |
+
+The generator is city-agnostic. Everything specific to Miami lives in
+`build/city.json`: the programme name, dates, tiers, meals, source
+attribution and one accent colour. The same code builds the
+[Dine Out Lauderdale guide](https://megabyte79.github.io/dineout-lauderdale/).
+
+```
+python3 build/scoring.py  .        # recompute every derived field
+python3 build/validate.py .        # data gates
+python3 build/render.py   .        # write index.html
+node     build/qa.mjs     .        # browser checks, both themes
+```
 
 ## The numbers
 
-- **682 menus** across **382 restaurants**, every tier
-- **3,626 of 6,142 dishes** carry a real published price (59%)
-- 2,824 of those came off the restaurant's own current menu
+- **680 menus** across **381 restaurants**, every tier
+- **7,035 of 7,153 dishes** carry a price (98%)
+- **4,812 are real published prices** — 3,597 an exact match on the
+  restaurant's own current menu, 1,215 a rename or close variant
+- **2,223 are benchmarked estimates**, each anchored to named priced dishes
+  and shown with its working
+- 118 dishes could not be priced honestly at all
 
 ## How a verdict is decided
 
@@ -41,9 +58,9 @@ Each menu is scored against what the same food costs à la carte.
 A dish carrying a supplement only counts for the difference: a $54 ribeye at
 +$15 contributes $39 toward the base price, not $54.
 
-## Why so many menus say "not enough prices"
+## Where the estimates come from
 
-About 40% of Miami Spice dishes have no published à la carte price, for reasons
+About 30% of Miami Spice dishes have no published à la carte price, for reasons
 that are mostly not fixable:
 
 - **The dish only exists on the prix-fixe menu.** The largest single cause.
@@ -54,15 +71,29 @@ that are mostly not fixable:
 - **The item is genuinely unpriceable** — "chef's selection", market price, or a
   build-your-own pick spanning a wide range.
 
-When a menu is not fully priced, the guide will not call it a good or a bad
-deal. The dishes we could price are shown with their sources; the rest are shown
-without a price. This matters: an early build scored a menu with *no* prices as
-"worth $0, costs more than ordering normally", which is worse than saying
-nothing.
+Rather than leave those blank, each one carries a **benchmarked estimate**. The
+anchor is, in order of preference: a priced dish in the same course at the same
+restaurant, a priced dish elsewhere on that restaurant's menu, or the same dish
+at a named comparable restaurant in the same neighbourhood at the same price
+level. Every estimate shows its working, so you can see what it was priced
+against and disagree.
 
-The one verdict that survives incomplete data is **worth it if you order right**
-— the priced dishes alone already beat the tier, so the missing ones can only
-help.
+Estimates are marked. The dot on each card says whether its prices are verified,
+partly estimated, or mostly estimated, and the source line under each dish says
+which it is.
+
+Two things the guide will not do with an estimate:
+
+- **Take a price off a prix-fixe menu.** That is the tier price, not the dish
+  price, and using one makes a good deal look like a wash. This is checked
+  automatically on every price in the build.
+- **State a verdict more firmly than the data allows.** When a call rests on
+  estimates and sits close enough to the line that one of them could flip it,
+  the card says "Likely" and its verdict wears a dashed border. 152 of the 680
+  menus are marked that way.
+
+11 menus still say **not enough published prices to judge**. Those are the ones
+where a whole course has no price at all and no honest comparator existed.
 
 ## Prices move
 
