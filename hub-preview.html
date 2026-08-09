@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DineDecoded — restaurant weeks, priced dish by dish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Extra+Condensed:wght@700;800&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20512%20512%22%3E%0A%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%2292%22%20fill%3D%22%231C1D21%22/%3E%0A%3Cg%20transform%3D%22translate%28153%2C494%29%20scale%280.682%2C-0.682%29%22%20fill%3D%22%23FFB03A%22%3E%3Cpath%20d%3D%22M19%20-55%20166%20743H281L135%20-55Z%22%20transform%3D%22translate%280%2C210%29%22/%3E%3C/g%3E%3C/svg%3E">
+<meta name="description" content="Restaurant weeks across Florida, priced dish by dish against each restaurant's own everyday menu. Which deals actually save you money.">
+<style>
+:root{
+  /* Ink + paper + one gold accent. The chrome commits to no city's hue, which
+     is what lets every city's hue sit on it: red, blue, and whatever Orlando
+     or Tampa brings. Green appears ONLY as verdict data, never as chrome. */
+  --abyss:#101114; --panel:#17191D; --edge:rgba(250,247,242,.10);
+  --ink:#FAF7F2; --sub:#C8C4BC; --mut:#8B877F;
+  --gold:#FFB03A; --gold-deep:#F2A71B;
+  --vgood:#1FA971; --vpick:#7C93C9; --vthin:#E8B23C; --vlose:#FF6B52;
+  --mia:#FF6B63; --lau:#5B9CF2;
+  --display:"Saira Extra Condensed",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--abyss);color:var(--ink);
+  font-family:"Montserrat",system-ui,sans-serif;font-size:15px;line-height:1.55;overflow-x:hidden}
+.wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+/* aurora */
+.aur{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.aur i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.24}
+.aur i:nth-child(1){width:640px;height:640px;background:#3A3730;top:-220px;right:-160px;animation:dr1 26s ease-in-out infinite alternate}
+.aur i:nth-child(2){width:520px;height:520px;background:#26241F;bottom:-200px;left:-140px;animation:dr2 32s ease-in-out infinite alternate}
+.aur i:nth-child(3){width:300px;height:300px;background:#FFB03A;top:38%;left:62%;opacity:.05;animation:dr1 40s ease-in-out infinite alternate-reverse}
+@keyframes dr1{to{transform:translate(-120px,90px) scale(1.15)}}
+@keyframes dr2{to{transform:translate(100px,-70px) scale(1.1)}}
+main{position:relative;z-index:1}
+/* Full-bleed appetite-first hero, the move both official sites lead with.
+   The photo sits under an ink gradient so the wordmark stays the subject. */
+.hero-ph{position:absolute;top:0;left:0;right:0;height:640px;z-index:0;
+  background:#17191D url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=2000&q=75') center 40%/cover no-repeat}
+.hero-ph:after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(16,17,20,.86) 0%,rgba(16,17,20,.72) 45%,#101114 96%)}
+/* topbar */
+.top{display:flex;align-items:center;gap:10px;padding:16px 0;font-size:13px}
+.top b{color:var(--ink);letter-spacing:.07em;font-weight:750}
+.top b .sl{color:var(--gold)}
+.top nav{margin-left:auto;display:flex;gap:22px}
+.top a{color:var(--sub);text-decoration:none;font-weight:600}
+.top a:hover{color:#fff}
+/* hero */
+.hero{padding:58px 0 8px;text-align:left}
+.wmark{height:92px;width:auto;display:block}
+@media(max-width:700px){.wmark{height:56px}}
+.kick{font-size:12px;font-weight:700;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin:0 0 18px}
+.tag{font-size:19px;color:var(--sub);max-width:56ch;margin:22px 0 0}
+.tag b{color:#fff}
+.tag .dec{color:var(--gold);font-family:ui-monospace,monospace;font-size:17px}
+.ctas{display:flex;gap:12px;margin:30px 0 0;flex-wrap:wrap}
+.cta{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;
+  padding:13px 22px;border-radius:999px;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.cta.mia{background:var(--mia);color:#2A0705}
+.cta.lau{background:var(--lau);color:#061424}
+.cta:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.cta small{font-weight:600;opacity:.75;font-size:11px}
+/* ticker */
+.tickwrap{margin:46px 0 0;border-top:1px solid var(--edge);border-bottom:1px solid var(--edge);
+  background:rgba(23,25,29,.6);overflow:hidden;position:relative}
+.tickwrap:before{content:"REAL DEALS, DECIDED BY THE MATH";position:absolute;left:22px;top:-9px;
+  font-size:10px;font-weight:800;letter-spacing:.18em;color:var(--gold);background:var(--abyss);padding:0 10px}
+.tick{display:flex;gap:0;width:max-content;animation:scroll 55s linear infinite;padding:14px 0}
+.tickwrap:hover .tick{animation-play-state:paused}
+.tk{display:inline-flex;align-items:center;gap:9px;padding:0 26px;font-size:13.5px;color:var(--sub);white-space:nowrap;border-right:1px solid var(--edge)}
+.tk i{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.tk em{font-style:normal;color:var(--mut);font-size:12px}
+.tk b{color:var(--gold);font-weight:800}
+.tk u{text-decoration:none;color:var(--vgood);font-weight:800}
+@keyframes scroll{to{transform:translateX(-50%)}}
+/* stats */
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin:50px 0 0}
+.st{flex:1 1 200px;background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:22px 24px;position:relative;overflow:hidden}
+.st:after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold)}
+.st b{display:block;font-family:var(--display);font-size:46px;font-weight:800;line-height:1;letter-spacing:.02em}
+.st span{font-size:11px;color:var(--mut);letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.st.gd b{color:var(--vgood)}
+/* sections */
+h2{font-family:var(--display);text-transform:uppercase;font-size:30px;letter-spacing:.05em;margin:64px 0 6px;color:#fff}
+h2 .n{color:var(--mut);font-size:15px;font-family:"Montserrat";font-weight:600;letter-spacing:0;text-transform:none}
+.sub2{color:var(--sub);font-size:13.5px;margin:0 0 20px}
+/* live tiles */
+.lgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.lt{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:0;position:relative;overflow:hidden;
+  transition:transform .18s,border-color .18s,box-shadow .18s}
+.lt .ph{height:172px;background-color:#26241F;background-size:cover;background-position:center;display:block;
+  border-bottom:1px solid var(--edge);position:relative}
+.lt .ph:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,17,20,.05) 40%,rgba(16,17,20,.55))}
+.lt .body{padding:20px 24px 24px}
+.lt:hover{transform:translateY(-4px);border-color:rgba(255,176,58,.4);box-shadow:0 16px 44px rgba(0,0,0,.4)}
+.lt.mia{border-top:3px solid var(--mia)} .lt.lau{border-top:3px solid var(--lau)}
+.lname{font-family:var(--display);font-size:30px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin:0;color:#fff}
+.lmeta{font-size:12.5px;color:var(--sub);margin:4px 0 14px}
+.lmeta b{color:#fff}
+.live{position:absolute;top:14px;right:14px;z-index:2;font-size:10px;font-weight:800;letter-spacing:.08em;
+  color:#241A05;background:var(--gold);padding:5px 12px;border-radius:999px}
+.live i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#241A05;margin-right:5px;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.3}}
+/* verdict distribution bar — real data, verdict colours */
+.dist{height:10px;border-radius:5px;overflow:hidden;display:flex;margin:6px 0 4px}
+.dist i{display:block;height:100%}
+.dlab{font-size:10.5px;color:var(--mut);margin-bottom:14px}
+.dlab b{color:var(--vgood)}
+.lstats{display:flex;gap:20px;margin:0 0 18px}
+.ls b{display:block;font-family:var(--display);font-size:24px;font-weight:800;color:#fff;line-height:1}
+.ls span{font-size:10px;color:var(--mut);letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.go{display:block;text-align:center;font-size:14px;font-weight:700;color:#241A05;background:var(--gold);
+  border-radius:10px;padding:13px;text-decoration:none;transition:background .15s}
+.lt.mia .go{background:var(--mia);color:#2A0705}
+.lt.lau .go{background:var(--lau);color:#061424}
+.go:hover{filter:brightness(1.1)}
+/* timeline */
+.tlbox{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:24px 24px 16px}
+.months{display:grid;grid-template-columns:repeat(12,1fr);font-size:10px;font-weight:700;color:var(--mut);
+  letter-spacing:.1em;margin:0 0 8px 168px;padding-right:86px}
+.months span{text-align:left;border-left:1px solid var(--edge);padding-left:5px}
+.trow{display:flex;align-items:center;gap:0;margin:7px 0}
+.tname{flex:0 0 168px;font-size:12.5px;font-weight:600;color:var(--sub)}
+.tlane{flex:1;position:relative;height:16px;background:rgba(250,247,242,.04);border-radius:4px;
+  background-image:repeating-linear-gradient(90deg,transparent 0 calc(100%/12 - 1px),var(--edge) calc(100%/12 - 1px) calc(100%/12))}
+.tbar{position:absolute;top:2px;bottom:2px;border-radius:4px}
+.tbar.mia{background:var(--mia);box-shadow:0 0 14px rgba(255,107,99,.4)}
+.tbar.lau{background:var(--lau);box-shadow:0 0 14px rgba(91,156,242,.4)}
+.tbar.soon{background:var(--gold-deep)}
+.tbar.past{background:rgba(250,247,242,.16)}
+.tnote{flex:0 0 86px;text-align:right;font-size:11px;color:var(--mut)}
+.tkey{display:flex;gap:18px;font-size:11px;color:var(--mut);margin:14px 0 0 168px;flex-wrap:wrap}
+.tkey i{width:14px;height:8px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:0}
+.tba{margin:16px 0 0 168px;font-size:12px;color:var(--mut)}
+.tba b{color:var(--sub);font-weight:600}
+/* footer */
+footer{margin:70px 0 0;padding:26px 0 60px;border-top:1px solid var(--edge);font-size:12.5px;color:var(--mut);max-width:80ch}
+footer b{color:var(--sub)} footer a{color:var(--gold)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:760px){.tname{flex-basis:110px;font-size:11px}.months{margin-left:110px}.tkey,.tba{margin-left:110px}.tnote{display:none}}
+</style></head><body>
+<div class="aur" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="hero-ph" aria-hidden="true"></div>
+<main class="wrap">
+<div class="top"><b>DINE<span class="sl">/</span>DECODED</b>
+  <nav><a href="#guides">Guides</a><a href="#season">Season</a><a href="#about">About</a><a href="mailto:matt@dinedecoded.com">Contact</a></nav></div>
+
+<section class="hero">
+  <p class="kick">Florida restaurant weeks · priced dish by dish</p>
+  <svg class="wmark" xmlns="http://www.w3.org/2000/svg" viewBox="-40 -40 5134.0 800"><g transform="translate(0,700) scale(1,-1)" fill="#FAF7F2"><path transform="translate(0,0)" d="M39 688H206Q295 688 332.5 657.5Q370 627 379.0 562.0Q388 497 388 344Q388 191 379.0 126.0Q370 61 332.5 30.5Q295 0 206 0H39ZM206 125Q230 125 238.5 135.0Q247 145 249.5 187.0Q252 229 252 344Q252 459 249.5 501.0Q247 543 238.5 553.0Q230 563 206 563H175V125Z"/><path transform="translate(461.0,0)" d="M39 0V688H177V0Z"/><path transform="translate(722.0,0)" d="M280 0 173 345H169V0H39V688H166L264 376H269V688H400V0Z"/><path transform="translate(1206.0,0)" d="M39 0V688H315V563H176V410H298V285H176V125H315V0Z"/></g><g transform="translate(1678.0,700) scale(1,-1)" fill="#FFB03A"><path transform="translate(0,-6) scale(1.0,1.03)" d="M19 -55 166 743H281L135 -55Z"/></g><g transform="translate(2109.0,700) scale(1,-1)" fill="#FAF7F2"><path transform="translate(0,0)" d="M39 688H206Q295 688 332.5 657.5Q370 627 379.0 562.0Q388 497 388 344Q388 191 379.0 126.0Q370 61 332.5 30.5Q295 0 206 0H39ZM206 125Q230 125 238.5 135.0Q247 145 249.5 187.0Q252 229 252 344Q252 459 249.5 501.0Q247 543 238.5 553.0Q230 563 206 563H175V125Z"/><path transform="translate(461.0,0)" d="M39 0V688H315V563H176V410H298V285H176V125H315V0Z"/><path transform="translate(848.0,0)" d="M208 -8Q128 -8 90.0 24.0Q52 56 40.0 127.5Q28 199 28 344Q28 488 41.0 560.0Q54 632 91.5 664.0Q129 696 208 696Q235 696 261.5 691.5Q288 687 300 681V566Q263 571 233 571Q198 571 185.5 558.0Q173 545 169.5 502.5Q166 460 166 344Q166 228 169.5 185.5Q173 143 185.5 130.0Q198 117 233 117Q272 117 302 122V10Q285 2 258.5 -3.0Q232 -8 208 -8Z"/><path transform="translate(1216.0,0)" d="M28 344Q28 501 37.0 567.5Q46 634 83.5 665.0Q121 696 210 696Q299 696 336.5 665.0Q374 634 383.0 567.0Q392 500 392 344Q392 188 383.0 121.0Q374 54 336.5 23.0Q299 -8 210 -8Q121 -8 83.5 23.0Q46 54 37.0 120.5Q28 187 28 344ZM254 344Q254 465 251.5 507.5Q249 550 241.0 560.5Q233 571 210 571Q187 571 179.0 560.5Q171 550 168.5 507.5Q166 465 166 344Q166 223 168.5 180.5Q171 138 179.0 127.5Q187 117 210 117Q233 117 241.0 127.5Q249 138 251.5 180.5Q254 223 254 344Z"/><path transform="translate(1681.0,0)" d="M39 688H206Q295 688 332.5 657.5Q370 627 379.0 562.0Q388 497 388 344Q388 191 379.0 126.0Q370 61 332.5 30.5Q295 0 206 0H39ZM206 125Q230 125 238.5 135.0Q247 145 249.5 187.0Q252 229 252 344Q252 459 249.5 501.0Q247 543 238.5 553.0Q230 563 206 563H175V125Z"/><path transform="translate(2142.0,0)" d="M39 0V688H315V563H176V410H298V285H176V125H315V0Z"/><path transform="translate(2529.0,0)" d="M39 688H206Q295 688 332.5 657.5Q370 627 379.0 562.0Q388 497 388 344Q388 191 379.0 126.0Q370 61 332.5 30.5Q295 0 206 0H39ZM206 125Q230 125 238.5 135.0Q247 145 249.5 187.0Q252 229 252 344Q252 459 249.5 501.0Q247 543 238.5 553.0Q230 563 206 563H175V125Z"/></g></svg>
+  <p class="tag">We price every dish on every fixed-price menu against the restaurant's own
+  everyday menu. <b>The math decides</b> — <span class="dec" id="dec">which deals actually save you money.</span></p>
+  <div class="ctas">
+    <a class="cta mia" href="https://megabyte79.github.io/miami-spice/">Miami Spice&nbsp;<small>680 menus</small></a>
+    <a class="cta lau" href="https://megabyte79.github.io/dineout-lauderdale/">Dine Out Lauderdale&nbsp;<small>235 menus</small></a>
+  </div>
+</section>
+
+<div class="tickwrap" aria-label="Examples of can't-lose deals"><div class="tick"><span class="tk"><i style="background:#FF6B63"></i>La Terraza Nicabanos<em>Dinner $65</em><b>save $49–$85</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Tea Room<em>Dinner $65</em><b>save $42–$67</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Prime Italian<em>Dinner $50</em><b>save $42–$73</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Riviera Notti Restaurant<em>Lunch $40</em><b>save $40–$70</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Catch Miami Beach<em>Dinner $65</em><b>save $40–$86</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Le Jardinier Miami<em>Lunch $40</em><b>save $36–$53</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Il Mulino New York<em>Lunch $40</em><b>save $36–$53</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Bagatelle Miami River<em>Dinner $65</em><b>save $33–$65</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>LT South Beach<em>Lunch $40</em><b>save $31–$39</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Riviera Notti Restaurant<em>Dinner $65</em><b>save $31–$69</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Cecconi's Miami Beach at Soho Beach House<em>Lunch $40</em><b>save $30–$51</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>DOYA<em>Lunch $40</em><b>save $29–$47</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Even Keel Fish Shack<em>Dinner $45</em><b>save $55</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Rodizio Grill Brazilian Steakhouse<em>Dinner $45</em><b>save $46</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Chima Steakhouse<em>Dinner $60</em><b>save $34–$58</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Maass<em>Dinner $60</em><b>save $32</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Le Bistro<em>Dinner $45</em><b>save $29–$39</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Radiant 166<em>Dinner $60</em><b>save $28–$32</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Fogo De CHÃO<em>Dinner $60</em><b>save $22–$24</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Le Bistro<em>Lux $75</em><b>save $22–$39</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>The Easton - Rooftop Pool + Lounge<em>Dinner $45</em><b>save $21–$39</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>The Kester<em>Lunch $35</em><b>save $20–$23</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Olive & Sea<em>Dinner $45</em><b>save $20–$26</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Wiseguy Pizza<em>Dinner $45</em><b>save $20</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>La Terraza Nicabanos<em>Dinner $65</em><b>save $49–$85</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Tea Room<em>Dinner $65</em><b>save $42–$67</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Prime Italian<em>Dinner $50</em><b>save $42–$73</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Riviera Notti Restaurant<em>Lunch $40</em><b>save $40–$70</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Catch Miami Beach<em>Dinner $65</em><b>save $40–$86</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Le Jardinier Miami<em>Lunch $40</em><b>save $36–$53</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Il Mulino New York<em>Lunch $40</em><b>save $36–$53</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Bagatelle Miami River<em>Dinner $65</em><b>save $33–$65</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>LT South Beach<em>Lunch $40</em><b>save $31–$39</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Riviera Notti Restaurant<em>Dinner $65</em><b>save $31–$69</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>Cecconi's Miami Beach at Soho Beach House<em>Lunch $40</em><b>save $30–$51</b><u>✓</u></span><span class="tk"><i style="background:#FF6B63"></i>DOYA<em>Lunch $40</em><b>save $29–$47</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Even Keel Fish Shack<em>Dinner $45</em><b>save $55</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Rodizio Grill Brazilian Steakhouse<em>Dinner $45</em><b>save $46</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Chima Steakhouse<em>Dinner $60</em><b>save $34–$58</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Maass<em>Dinner $60</em><b>save $32</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Le Bistro<em>Dinner $45</em><b>save $29–$39</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Radiant 166<em>Dinner $60</em><b>save $28–$32</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Fogo De CHÃO<em>Dinner $60</em><b>save $22–$24</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Le Bistro<em>Lux $75</em><b>save $22–$39</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>The Easton - Rooftop Pool + Lounge<em>Dinner $45</em><b>save $21–$39</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>The Kester<em>Lunch $35</em><b>save $20–$23</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Olive & Sea<em>Dinner $45</em><b>save $20–$26</b><u>✓</u></span><span class="tk"><i style="background:#5B9CF2"></i>Wiseguy Pizza<em>Dinner $45</em><b>save $20</b><u>✓</u></span></div></div>
+
+<div class="stats">
+  <div class="st"><b data-n="915">0</b><span>menus decoded</span></div>
+  <div class="st"><b data-n="549">0</b><span>restaurants</span></div>
+  <div class="st"><b data-n="9146">0</b><span>dishes priced</span></div>
+  <div class="st gd"><b data-n="572">0</b><span>can't-lose deals found</span></div>
+</div>
+
+<h2 id="guides">Decoded now <span class="n">· full guides live</span></h2>
+<p class="sub2">Both running Aug 1 – Sep 30, 2026. Every verdict shown with its working.</p>
+<div class="lgrid">
+  <div class="lt mia"><span class="live"><i></i>LIVE</span>
+    <span class="ph" style="background-image:url(&#39;https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=1100&q=70&#39;)"></span>
+    <div class="body">
+    <h3 class="lname">Miami Spice</h3>
+    <div class="lmeta">Miami · <b>$40 / $50 / $65</b> · brunch, lunch &amp; dinner</div>
+    <div class="lstats">
+      <div class="ls"><b>680</b><span>menus</span></div>
+      <div class="ls"><b>381</b><span>restaurants</span></div>
+      <div class="ls"><b>7,032</b><span>dishes priced</span></div>
+    </div>
+    <div class="dist" title="Verdicts across 680 menus">
+      <i style="width:63%;background:var(--vgood)" title="good however you order: 428"></i>
+      <i style="width:31%;background:var(--vpick)" title="worth it if you order right: 210"></i>
+      <i style="width:3%;background:var(--vthin)" title="too close to call: 25"></i>
+      <i style="width:1%;background:var(--vlose)" title="costs more: 6"></i>
+      <i style="width:2%;background:#4A4B4F" title="no figure: 11"></i>
+    </div>
+    <div class="dlab"><b>63%</b> of menus: good however you order</div>
+    <a class="go" href="https://megabyte79.github.io/miami-spice/">Open the Miami Spice guide →</a>
+    </div>
+  </div>
+  <div class="lt lau"><span class="live"><i></i>LIVE</span>
+    <span class="ph" style="background-image:url(&#39;https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1100&q=70&#39;)"></span>
+    <div class="body">
+    <h3 class="lname">Dine Out Lauderdale</h3>
+    <div class="lmeta">Greater Fort Lauderdale · <b>$35 / $45 / $60 / $75</b> · lunch &amp; dinner</div>
+    <div class="lstats">
+      <div class="ls"><b>235</b><span>menus</span></div>
+      <div class="ls"><b>168</b><span>restaurants</span></div>
+      <div class="ls"><b>2,114</b><span>dishes priced</span></div>
+    </div>
+    <div class="dist" title="Verdicts across 235 menus">
+      <i style="width:61%;background:var(--vgood)" title="good however you order: 144"></i>
+      <i style="width:24%;background:var(--vpick)" title="worth it if you order right: 56"></i>
+      <i style="width:8%;background:var(--vthin)" title="too close to call: 19"></i>
+      <i style="width:6%;background:var(--vlose)" title="costs more: 13"></i>
+      <i style="width:1%;background:#4A4B4F" title="party-priced: 3"></i>
+    </div>
+    <div class="dlab"><b>61%</b> of menus: good however you order</div>
+    <a class="go" href="https://megabyte79.github.io/dineout-lauderdale/">Open the Dine Out Lauderdale guide →</a>
+    </div>
+  </div>
+</div>
+
+<h2 id="season">The Florida season <span class="n">· twelve months of restaurant weeks</span></h2>
+<p class="sub2">Where each programme sits in the year. Live ones glow in their city colours; gold is up next; grey already ran in 2026.</p>
+<div class="tlbox">
+  <div class="months"><span>J</span><span>F</span><span>M</span><span>A</span><span>M</span><span>J</span><span>J</span><span>A</span><span>S</span><span>O</span><span>N</span><span>D</span></div>
+  <div class="trow"><span class="tname">Miami Spice</span><span class="tlane"><i class="tbar mia" style="left:58.3%;width:16.7%"></i></span><span class="tnote">live now</span></div><div class="trow"><span class="tname">Dine Out Lauderdale</span><span class="tlane"><i class="tbar lau" style="left:58.3%;width:16.7%"></i></span><span class="tnote">live now</span></div><div class="trow"><span class="tname">Sizzle Dining</span><span class="tlane"><i class="tbar soon" style="left:66.7%;width:8.3%"></i></span><span class="tnote">Sep</span></div><div class="trow"><span class="tname">The Palm Beaches</span><span class="tlane"><i class="tbar soon" style="left:66.7%;width:8.3%"></i></span><span class="tnote">Sep</span></div><div class="trow"><span class="tname">Downtown Delray</span><span class="tlane"><i class="tbar soon" style="left:66.7%;width:8.3%"></i></span><span class="tnote">Sep</span></div><div class="trow"><span class="tname">Taste of Doral</span><span class="tlane"><i class="tbar past" style="left:50.0%;width:8.3%"></i></span><span class="tnote">Jul</span></div><div class="trow"><span class="tname">Orlando Bite 30</span><span class="tlane"><i class="tbar past" style="left:41.7%;width:16.7%"></i></span><span class="tnote">Jun–Jul</span></div><div class="trow"><span class="tname">Savor Sarasota</span><span class="tlane"><i class="tbar past" style="left:41.7%;width:8.3%"></i></span><span class="tnote">Jun</span></div><div class="trow"><span class="tname">Tampa Bay RW</span><span class="tlane"><i class="tbar past" style="left:41.7%;width:8.3%"></i></span><span class="tnote">Jun</span></div><div class="trow"><span class="tname">Jacksonville RW</span><span class="tlane"><i class="tbar past" style="left:0.0%;width:8.3%"></i></span><span class="tnote">Jan</span></div><div class="trow"><span class="tname">Amelia Island RW</span><span class="tlane"><i class="tbar past" style="left:0.0%;width:8.3%"></i></span><span class="tnote">Jan</span></div><div class="trow"><span class="tname">Great Southern</span><span class="tlane"><i class="tbar past" style="left:0.0%;width:16.7%"></i></span><span class="tnote">late Jan</span></div>
+  <div class="tkey"><span><i style="background:var(--mia)"></i>live · Miami</span>
+  <span><i style="background:var(--lau)"></i>live · Lauderdale</span>
+  <span><i style="background:var(--gold-deep)"></i>up next, guide coming</span>
+  <span><i style="background:rgba(250,247,242,.16)"></i>ran earlier in 2026</span></div>
+  <div class="tba"><b>Dates not yet announced:</b> Orlando's Magical Dining · Boca Restaurant Month · Black Restaurant Week Florida · Englewood Restaurant Week</div>
+</div>
+
+<footer id="about">
+  <p><b>What "decoded" means.</b> For each programme we price every dish on the fixed-price menu against the restaurant's own everyday à la carte menu, then say plainly whether the deal saves you money, which picks make it worth it, and where we had to estimate. Every number shows its source.</p>
+  <p><b>How the guides are made.</b> Menus are captured from each programme's public listings; prices are verified on each restaurant's own published menu, with benchmarked estimates clearly marked and shown with their working. Corrections land in each guide's public commit history.</p>
+  <p><b>Contact.</b> Spot an error, run a restaurant week we should cover, or want to say hello: <a href="mailto:matt@dinedecoded.com">matt@dinedecoded.com</a>.</p>
+  <p>Photography: <a href="https://unsplash.com">Unsplash</a>, free licence; dishes shown are illustrative, not from any specific menu, and nothing is taken from any programme site. Hobby project. Unofficial and unaffiliated with any programme or restaurant. Calendar data cross-checked with <a href="https://www.findrestaurantweeks.com/fl/">findrestaurantweeks.com</a>.</p>
+</footer>
+</main>
+<script>
+/* count-up on scroll — the numbers are the argument, so they perform */
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return; io.unobserve(e.target);
+  const el=e.target,n=+el.dataset.n,t0=performance.now(),D=1400;
+  const f=t=>{const k=Math.min((t-t0)/D,1),v=Math.round(n*(1-Math.pow(1-k,3)));
+    el.textContent=v.toLocaleString(); if(k<1)requestAnimationFrame(f)};
+  requestAnimationFrame(f);
+}),{threshold:.6});
+document.querySelectorAll('.st b').forEach(el=>io.observe(el));
+/* decode scramble on the tagline, once */
+const dec=document.getElementById('dec'), FIN=dec.textContent, CH='$0123456789▓▒░/#%';
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+  let i=0; const iv=setInterval(()=>{
+    dec.textContent=FIN.slice(0,i)+[...FIN.slice(i)].map(c=>c===' '?' ':CH[Math.random()*CH.length|0]).join('');
+    if(++i>FIN.length){clearInterval(iv);dec.textContent=FIN}},28);
+}
+</script>
+</body></html>
