@@ -62,9 +62,7 @@ main{position:relative;z-index:1}
 /* ticker */
 .tickwrap{margin:46px 0 0;border-top:1px solid var(--edge);border-bottom:1px solid var(--edge);
   background:rgba(23,25,29,.6);overflow:hidden;position:relative}
-.tickwrap:before{content:"REAL DEALS, DECIDED BY THE MATH";position:absolute;left:22px;top:-9px;
-  font-size:10px;font-weight:800;letter-spacing:.18em;color:var(--gold);background:var(--abyss);padding:0 10px}
-.tick{display:flex;gap:0;width:max-content;animation:scroll 55s linear infinite;padding:14px 0}
+.tick{display:flex;gap:0;width:max-content;animation:scroll 120s linear infinite;padding:14px 0}
 .tickwrap:hover .tick{animation-play-state:paused}
 .tk{display:inline-flex;align-items:center;gap:9px;padding:0 26px;font-size:13.5px;color:var(--sub);white-space:nowrap;border-right:1px solid var(--edge)}
 .tk i{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
@@ -91,6 +89,9 @@ h2 .n{color:var(--mut);font-size:15px;font-family:"Montserrat";font-weight:600;l
   border-bottom:1px solid var(--edge);position:relative}
 .lt .ph:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,17,20,.05) 40%,rgba(16,17,20,.55))}
 .lt .body{padding:20px 24px 24px}
+.phcap{position:absolute;left:12px;bottom:10px;z-index:2;font-size:10px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:#fff;background:rgba(16,17,20,.72);
+  padding:4px 10px;border-radius:999px}
 .lt:hover{transform:translateY(-4px);border-color:rgba(255,176,58,.4);box-shadow:0 16px 44px rgba(0,0,0,.4)}
 .lt.mia{border-top:3px solid var(--mia)} .lt.lau{border-top:3px solid var(--lau)}
 .lname{font-family:var(--display);font-size:30px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin:0;color:#fff}
@@ -133,8 +134,17 @@ h2 .n{color:var(--mut);font-size:15px;font-family:"Montserrat";font-weight:600;l
 .tba{margin:16px 0 0 168px;font-size:12px;color:var(--mut)}
 .tba b{color:var(--sub);font-weight:600}
 /* footer */
-footer{margin:70px 0 0;padding:26px 0 60px;border-top:1px solid var(--edge);font-size:12.5px;color:var(--mut);max-width:80ch}
-footer b{color:var(--sub)} footer a{color:var(--gold)}
+footer.site{margin:70px 0 0;padding:28px 0 56px;border-top:1px solid var(--edge);font-size:13px;color:var(--mut)}
+.fgrid{display:flex;gap:48px;flex-wrap:wrap}
+.fbrand{flex:1 1 260px;max-width:340px}
+.fbrand b{color:var(--ink);letter-spacing:.07em;font-weight:750}
+.fbrand .fsl{color:var(--gold)}
+.fbrand p{margin:8px 0 0;line-height:1.5;color:var(--mut)}
+.fcol{display:flex;flex-direction:column;gap:7px;min-width:150px}
+.fcol h4{margin:0 0 4px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--sub)}
+.fcol a{color:var(--mut);text-decoration:none}
+.fcol a:hover{color:var(--ink);text-decoration:underline}
+.fbase{margin-top:26px;padding-top:16px;border-top:1px solid var(--edge);font-size:11.5px;color:var(--mut)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media(max-width:760px){.tname{flex-basis:110px;font-size:11px}.months{margin-left:110px}.tkey,.tba{margin-left:110px}.tnote{display:none}}
 </style></head><body>
@@ -168,7 +178,7 @@ footer b{color:var(--sub)} footer a{color:var(--gold)}
 <p class="sub2">Both running Aug 1 – Sep 30, 2026. Every verdict shown with its working.</p>
 <div class="lgrid">
   <div class="lt mia"><span class="live"><i></i>LIVE</span>
-    <span class="ph" style="background-image:url(&#39;https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=1100&q=70&#39;)"></span>
+    <span class="ph" style="background-image:url(&#39;https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=1100&q=70&#39;)"><i class="phcap">In the guide · Yamashiro Miami · Japanese</i></span>
     <div class="body">
     <h3 class="lname">Miami Spice</h3>
     <div class="lmeta">Miami · <b>$40 / $50 / $65</b> · brunch, lunch &amp; dinner</div>
@@ -189,7 +199,7 @@ footer b{color:var(--sub)} footer a{color:var(--gold)}
     </div>
   </div>
   <div class="lt lau"><span class="live"><i></i>LIVE</span>
-    <span class="ph" style="background-image:url(&#39;https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1100&q=70&#39;)"></span>
+    <span class="ph" style="background-image:url(&#39;https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1100&q=70&#39;)"><i class="phcap">In the guide · Even Keel Fish Shack · Seafood</i></span>
     <div class="body">
     <h3 class="lname">Dine Out Lauderdale</h3>
     <div class="lmeta">Greater Fort Lauderdale · <b>$35 / $45 / $60 / $75</b> · lunch &amp; dinner</div>
@@ -223,11 +233,25 @@ footer b{color:var(--sub)} footer a{color:var(--gold)}
   <div class="tba"><b>Dates not yet announced:</b> Orlando's Magical Dining · Boca Restaurant Month · Black Restaurant Week Florida · Englewood Restaurant Week</div>
 </div>
 
-<footer id="about">
-  <p><b>What "decoded" means.</b> For each programme we price every dish on the fixed-price menu against the restaurant's own everyday à la carte menu, then say plainly whether the deal saves you money, which picks make it worth it, and where we had to estimate. Every number shows its source.</p>
-  <p><b>How the guides are made.</b> Menus are captured from each programme's public listings; prices are verified on each restaurant's own published menu, with benchmarked estimates clearly marked and shown with their working. Corrections land in each guide's public commit history.</p>
-  <p><b>Contact.</b> Spot an error, run a restaurant week we should cover, or want to say hello: <a href="mailto:matt@dinedecoded.com">matt@dinedecoded.com</a>.</p>
-  <p>Photography: <a href="https://unsplash.com">Unsplash</a>, free licence; dishes shown are illustrative, not from any specific menu, and nothing is taken from any programme site. Hobby project. Unofficial and unaffiliated with any programme or restaurant. Calendar data cross-checked with <a href="https://www.findrestaurantweeks.com/fl/">findrestaurantweeks.com</a>.</p>
+<footer id="about" class="site">
+  <div class="fgrid">
+    <div class="fbrand">
+      <b>DINE<span class="fsl">/</span>DECODED</b>
+      <p>Restaurant weeks, priced dish by dish against the everyday menu. The math decides.</p>
+    </div>
+    <nav class="fcol" aria-label="Guides">
+      <h4>Guides</h4>
+      <a href="https://megabyte79.github.io/miami-spice/">Miami Spice</a>
+      <a href="https://megabyte79.github.io/dineout-lauderdale/">Dine Out Lauderdale</a>
+    </nav>
+    <nav class="fcol" aria-label="Information">
+      <h4>Info</h4>
+      <a href="mailto:matt@dinedecoded.com?subject=DineDecoded%20%E2%80%94%20hello&body=Name%3A%0AWhat%20it%27s%20about%20(a%20restaurant%2C%20a%20restaurant%20week%20we%20should%20cover%2C%20something%20else)%3A%0A%0A">Contact</a>
+      <a href="https://github.com/megabyte79/miami-spice#readme" target="_blank" rel="noopener">Methodology</a>
+      <a href="https://www.findrestaurantweeks.com/fl/" target="_blank" rel="noopener">Florida calendar</a>
+    </nav>
+  </div>
+  <div class="fbase">© 2026 DineDecoded · Unofficial; not affiliated with any programme or restaurant · Photography via Unsplash, illustrative of listed restaurants, none from programme sites · The deals strip orders itself by your nearest city; nothing is stored</div>
 </footer>
 </main>
 <script>
@@ -240,6 +264,19 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{
   requestAnimationFrame(f);
 }),{threshold:.6});
 document.querySelectorAll('.st b').forEach(el=>io.observe(el));
+/* Order the deals strip by the visitor's nearest city. One anonymous
+   client-side lookup, nothing stored, nothing sent to us; if it fails or is
+   blocked the strip simply keeps its default mixed order. */
+fetch('https://ipapi.co/json/').then(r=>r.json()).then(g=>{
+  if(!g||typeof g.latitude!=='number')return;
+  const toMIA=Math.hypot(g.latitude-25.76,g.longitude+80.19);
+  const toFTL=Math.hypot(g.latitude-26.12,g.longitude+80.14);
+  const near=toMIA<=toFTL?'#FF6B63':'#5B9CF2';
+  document.querySelectorAll('.tick').forEach(t=>{
+    [...t.children].filter(k=>(k.querySelector('i')?.getAttribute('style')||'').includes(near))
+      .reverse().forEach(k=>t.prepend(k));
+  });
+}).catch(()=>{});
 /* decode scramble on the tagline, once */
 const dec=document.getElementById('dec'), FIN=dec.textContent, CH='$0123456789▓▒░/#%';
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
